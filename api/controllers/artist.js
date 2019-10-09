@@ -26,7 +26,7 @@ function getArtist(req, res) {
 
 function saveArtist(req, res) {
     var artist = new Artist();
-    var params = req.body;
+    var params = JSON.parse(req.body.json);
     console.log(params);
     artist.name = params.name;
     artist.description = params.description;
@@ -51,7 +51,7 @@ function getArtists(req, res) {
     } else {
         var page = 1;
     }
-    var itemsPerPage = 3;
+    var itemsPerPage = 5;
 
     Artist.find().sort('name').paginate(page, itemsPerPage, function(err, artists, total) {
         if (err) {
@@ -71,7 +71,7 @@ function getArtists(req, res) {
 
 function updateArtist(req, res) {
     var artistId = req.params.id;
-    var update = req.body;
+    var update = JSON.parse(req.body.json);
 
     Artist.findByIdAndUpdate(artistId, update, (err, artistUpdated) => {
         if (err) {
@@ -159,7 +159,7 @@ function uploadImage(req, res) {
 function getImageFile(req, res) {
     var imageFile = req.params.imageFile;
 
-    var path_file = './uploads/artist/' + imageFile;
+    var path_file = './uploads/artists/' + imageFile;
     fs.exists(path_file, function(exists) {
         if (exists) {
             res.sendFile(path.resolve(path_file));
@@ -168,6 +168,7 @@ function getImageFile(req, res) {
         }
     });
 }
+
 
 module.exports = {
     getArtist,
