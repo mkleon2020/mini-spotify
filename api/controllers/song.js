@@ -8,22 +8,21 @@ var Song = require('../models/song');
 
 function getSong(req, res) {
     var songId = req.params.id;
-
     Song.findById(songId).populate({ path: 'album' }).exec((err, song) => {
         if (err) {
-            res.status(500).send({ message: 'Error en la peticion' });
+            return res.status(500).send({ message: 'Error en la peticion' });
         } else {
             if (!song) {
-                res.status(404).send({ message: 'No hay cancion o no existe' });
+                return res.status(404).send({ message: 'No hay cancion o no existe' });
             } else {
-                res.status(200).send({ song });
+                return res.status(200).send({ song });
             }
         }
     });
 
 }
 
-function getSons(req, res) {
+function getSongs(req, res) {
     var albumId = req.params.album;
 
     if (!albumId) {
@@ -54,7 +53,7 @@ function getSons(req, res) {
 function saveSong(req, res) {
     var song = new Song();
 
-    var params = req.body;
+    var params = JSON.parse(req.body.json);
 
     song.number = params.number;
     song.name = params.name;
@@ -77,7 +76,7 @@ function saveSong(req, res) {
 
 function updateSong(req, res) {
     var songId = req.params.id;
-    var update = req.body;
+    var update = JSON.parse(req.body.json);
 
     Song.findByIdAndUpdate(songId, update, (err, songUpdated) => {
         if (err) {
@@ -154,12 +153,11 @@ function getSongFile(req, res) {
 
 module.exports = {
     getSong,
-    getSons,
+    getSongs,
     saveSong,
     updateSong,
     deleteSong,
     uploadFile,
     getSongFile
-
 
 };

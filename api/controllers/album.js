@@ -25,7 +25,7 @@ function getAlbum(req, res) {
 function saveAlbum(req, res) {
     var album = new Album();
 
-    var params = req.body;
+    var params = JSON.parse(req.body.json);
     album.title = params.title;
     album.description = params.description;
     album.year = params.year;
@@ -49,7 +49,6 @@ function saveAlbum(req, res) {
 
 function getAlbums(req, res) {
     var artistId = req.params.artist;
-
     if (!artistId) {
         // sacar todos los albums de la base de datos
         var find = Album.find({}).sort('title');
@@ -73,7 +72,7 @@ function getAlbums(req, res) {
 
 function updateAlbum(req, res) {
     var albumId = req.params.id;
-    var update = req.body;
+    var update = JSON.parse(req.body.json);
 
     Album.findByIdAndUpdate(albumId, update, (err, albumUpdated) => {
         if (err) {
